@@ -50,7 +50,7 @@ build-iPhoneSimulator/
 # .ruby-version
 # .ruby-gemset
 
-src/.DS_Store
+.DS_Store
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrcsrc/.DS_Store
