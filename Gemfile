@@ -12,17 +12,35 @@ group :test do
 end
 
 group :development do
+	# Where the magic begins
+	gem 'sinatra'
+	
+	gem 'rake'
+	
+	# Easy way to require all files required in app to DRY up require's
+	gem 'require_all'
+	
+	# Auto reloading of the application when code changes have been made
 	gem 'shotgun'
+
+	# Testing Tools for Database and Business Logic
 	gem 'pry'
 	gem 'pry-remote'
 	gem 'tux'
 	gem 'byebug'
-	gem 'require_all'
-	gem 'rake'
-	gem 'sinatra'
+	
+	# Active Record connection
 	gem 'sinatra-activerecord'
+	# To Create Error messages for end user.
 	gem 'sinatra-flash'
+	
+	# Gem for interacting with JIRA
+	# Potentially re-write internally to remove dependency
 	gem 'jira-ruby'
+	# Making Simple HTTP requests
+	
 	gem 'httparty'
+	# Secure Environment Variables
+	
 	gem 'dotenv'
 end
