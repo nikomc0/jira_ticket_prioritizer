@@ -22,4 +22,7 @@ group :development do
 	gem 'sinatra'
 	gem 'sinatra-activerecord'
 	gem 'sinatra-flash'
+	gem 'jira-ruby'
+	gem 'httparty'
+	gem 'dotenv'
 end
