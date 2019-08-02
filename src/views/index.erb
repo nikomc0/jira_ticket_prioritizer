@@ -1,0 +1,15 @@
+<h1>ESUP Dashboard</h1>
+		<p>
+			<% @esup.issues.each do |issue| %>
+				<%= "#{issue.key} - #{issue.summary}" %> </br>
+				<%= "https://demandbase.atlassian.net/browse/#{issue.key}" %> </br>
+				<%= "#{issue.issuetype.name}" %> </br>
+				<%= "#{issue.priority.name}" %> </br>
+				<%= "Assignee - #{issue.assignee.displayName}" %> </br>
+				<%= "Reporter - #{issue.reporter.displayName}" %> </br>
+				<%= "Status - #{issue.status.name}" %> </br>
+				<%= "Created - #{Date.parse(issue.created).strftime('%m/%d/%Y')}" %> </br>
+				<%= "Updated - #{Date.parse(issue.updated).strftime('%m/%d/%Y')}" %> </br>
+			<br>
+			<% end %>
+		</p>
