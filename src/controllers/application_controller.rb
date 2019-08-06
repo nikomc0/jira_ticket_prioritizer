@@ -23,10 +23,12 @@ class ApplicationController < Sinatra::Base
 	client = JIRA::Client.new(options)
 
 	esup = client.Issue.jql("PROJECT = 'ESUP'")
+	user = client.options[:username]
 	pp esup
 
 	get '/' do
 		@esup = client.Issue.jql('PROJECT = "ESUP"')
+		@user = client.options[:username]
 		erb :index
 	end
 end
