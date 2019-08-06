@@ -23,11 +23,10 @@ class IssueController < Sinatra::Base
 	@@client = JIRA::Client.new(options)
 
 	def esups
-		esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE = "Bug" AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype], max_results: 1000)
+		@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE = "Bug" AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype], max_results: 1000)
 	end
 
 	get '/' do
-		esups
 		@user = @@client.options[:username]
 		erb :index
 	end
