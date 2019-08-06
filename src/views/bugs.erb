@@ -1,0 +1,15 @@
+<h1>Bugs</h1>
+			<% @bugs.each do |bug| %>
+				<h3> <%= "#{bug.key}" %> </h3>
+				<p> <%= "https://demandbase.atlassian.net/browse/#{bug.key}" %> </p>
+				<p> <%= "#{bug.summary}" %> </p>
+				<p> <%= "#{bug.description}" %> </p>
+
+				<img src=<%= "#{bug.priority.iconUrl}" %> width="16px" height="16px" ><%= "#{bug.priority.name}" %> </br>
+				<%= "Assignee - #{bug.assignee.displayName}" %> </br>
+				<%= "Reporter - #{bug.reporter.displayName}" %> </br>
+				<%= "Status - #{bug.status.name}" %> </br>
+				<%= "Created - #{Date.parse(bug.created).strftime('%m/%d/%Y')}" %> </br>
+				<%= "Updated - #{Date.parse(bug.updated).strftime('%m/%d/%Y')}" %> </br>
+			<br>
+			<% end %>

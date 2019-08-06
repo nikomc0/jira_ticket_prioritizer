@@ -1,15 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Debt Calculator</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+		<link rel="stylesheet" href="/style.css" type="text/css">
+	</head>
+
 <h1>ESUP Dashboard</h1>
-		<p>
-			<% @esup.issues.each do |issue| %>
-				<%= "#{issue.key} - #{issue.summary}" %> </br>
-				<%= "https://demandbase.atlassian.net/browse/#{issue.key}" %> </br>
-				<%= "#{issue.issuetype.name}" %> </br>
-				<%= "#{issue.priority.name}" %> </br>
-				<%= "Assignee - #{issue.assignee.displayName}" %> </br>
+			<% @esup.compact.each do |issue| %>
+				<h3> <%= "#{issue.key}" %> </h3>
+				<p> <%= "https://demandbase.atlassian.net/browse/#{issue.key}" %> </p>
+
+				<% if issue.summary %>
+					<p> <%= "#{issue.summary}" %> </p>
+				<% end %>
+
+				<% if issue.description %>
+					<p> <%= "#{issue.description}" %> </p>
+				<% end %>
+
+				<img src=<%= "#{issue.priority.iconUrl}" %> width="16px" height="16px" ><%= "#{issue.issuetype.name} - #{issue.priority.name}" %> </br>
+
+				<% if issue.assignee.displayName %>
+					<%="Assignee - #{issue.assignee.displayName}" %> </br>
+				<% end %>
+
 				<%= "Reporter - #{issue.reporter.displayName}" %> </br>
 				<%= "Status - #{issue.status.name}" %> </br>
 				<%= "Created - #{Date.parse(issue.created).strftime('%m/%d/%Y')}" %> </br>
-				<%= "Updated - #{Date.parse(issue.updated).strftime('%m/%d/%Y')}" %> </br>
+
+				<% if issue.updated %>
+					<%= "Updated - #{Date.parse(issue.updated).strftime('%m/%d/%Y')}" %> </br>
+				<% end %>
 			<br>
 			<% end %>
-		</p>
+
+			</html>

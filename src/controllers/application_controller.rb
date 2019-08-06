@@ -8,6 +8,7 @@ Dotenv.load('.env')
 class ApplicationController < Sinatra::Base
 	configure do
   	set :views, "src/views"
+  	set :public_dir, "public"
   end
 
 	options = {
@@ -20,12 +21,12 @@ class ApplicationController < Sinatra::Base
 	}
 
 	client = JIRA::Client.new(options)
-	esup = client.Issue.jql('PROJECT = "ESUP"').each do |issue|
-		pp issue.fields
-	end
+
+	esup = client.Issue.jql("PROJECT = 'ESUP'")
+	pp esup
 
 	get '/' do
-		@esup = client.Project.find("ESUP")
+		@esup = client.Issue.jql('PROJECT = "ESUP"')
 		erb :index
 	end
 end
