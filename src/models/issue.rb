@@ -1,3 +1,0 @@
-class Issue
-	
-end
