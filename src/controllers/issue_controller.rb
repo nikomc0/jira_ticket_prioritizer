@@ -23,15 +23,25 @@ class IssueController < Sinatra::Base
 	@@client = JIRA::Client.new(options)
 
 	@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
-	# @esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE = "Bug" AND STATUS in ("new", "In Progress", "acknowledge", "done")', fields:[:priority], max_results: 1000)
-	pp @esups[0...4]
+	@unassigned = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND ASSIGNEE is EMPTY')
+
+	# pp @esups[0...4]
+	pp @unassigned
 
 	def esups
 		@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
 	end
 
+	def unassigned
+		@unassigned = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND ASSIGNEE is EMPTY')
+	end
+
 	get '/' do
 		@user = @@client.options[:username]
 		erb :index
+	end
+
+	get '/unassigned' do
+
 	end
 end
