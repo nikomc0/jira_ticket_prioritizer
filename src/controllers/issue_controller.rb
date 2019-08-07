@@ -22,8 +22,12 @@ class IssueController < Sinatra::Base
 
 	@@client = JIRA::Client.new(options)
 
+	@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
+	# @esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE = "Bug" AND STATUS in ("new", "In Progress", "acknowledge", "done")', fields:[:priority], max_results: 1000)
+	pp @esups[0...4]
+
 	def esups
-		@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE = "Bug" AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype], max_results: 1000)
+		@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
 	end
 
 	get '/' do
