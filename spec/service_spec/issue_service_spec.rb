@@ -7,13 +7,13 @@ RSpec.describe IssueService do
     app
   end
 
-	let(:esups) { 
+	let(:esups) {
 		[{
-			key: 'ESUP-2033', 
-			fields: { 
+			key: 'ESUP-2033',
+			fields: {
 				summary: "This is a bug",
 				issuetype: { id: '1', name: 'Bug'},
-				priority:  { 
+				priority:  {
 					iconUrl: 'https://demandbase.atlassian.net/images/icons/priorities/medium.svg',
 					name: 'P3 - Medium',
 					id: 3,
@@ -31,11 +31,11 @@ RSpec.describe IssueService do
 		},
 
 		{
-			key: 'ESUP-2000', 
-			fields: { 
+			key: 'ESUP-2000',
+			fields: {
 				summary: "This is a bug",
 				issuetype: { id: '1', name: 'Bug'},
-				priority:  { 
+				priority:  {
 					iconUrl: 'https://demandbase.atlassian.net/images/icons/priorities/medium.svg',
 					name: 'P2 - Major',
 					id: 10000,
@@ -50,7 +50,7 @@ RSpec.describe IssueService do
 				updated: '2019-08-06T22:10:10.724-0700',
 				lastViewed: nil,
 			}
-		}] 
+		}]
 	}
 
 	it 'responds to :sort' do
@@ -65,5 +65,28 @@ RSpec.describe IssueService do
 		expect(subject).to respond_to(:prioritizer).with(1).argument
 	end
 
-	it 'prioritizes tickets based on SLA'
+	describe.context 'the Acknowledge prioritizer' do
+		it 'prioritizes new P0 tickets that are older than 10 min'
+		it 'prioritizes new P1 tickets that are older than 10 min'
+		it 'prioritizes new P2 tickets that are older than 24 hrs'
+		it 'prioritizes new P3 tickets that are older than 24 hrs'
+	end
+
+	describe.context 'the Triage prioritizer' do
+		it 'prioritizes acknowledge P0 tickets that are older than 15 min'
+		it 'prioritizes acknowledge P1 tickets that are older than 30 min'
+		it 'prioritizes acknowledge P2 tickets that are older than 1 week'
+		it 'prioritizes acknowledge P3 tickets that are older than 1 week'
+	end
+
+	describe.context 'the Response prioritizer' do
+		it 'prioritizes in progress P0 tickets that are older than 15 min'
+		it 'prioritizes in progress P1 tickets that are older than 30 min'
+		it 'prioritizes in progress P2 tickets that are older than 24 hrs'
+		it 'prioritizes in progress P3 tickets that are older that 48 hrs'
+	end
+
+	describe.context 'the Customer Response prioritizer' do
+		it 'prioritzes tickets newly marked as resolved'
+	end
 end
