@@ -25,7 +25,7 @@ class IssueController < Sinatra::Base
 	@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
 	# @unassigned = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND ASSIGNEE is EMPTY')
 
-	pp @esups[0...4]
+	pp @esups[0]
 	# pp @unassigned
 
 	def esups

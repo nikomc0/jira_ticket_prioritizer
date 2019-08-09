@@ -1,6 +1,6 @@
 require_relative "../../src/services/issue_service"
 
-RSpec.describe IssueService do
+RSpec.shared_context 'common' do
 	subject do
     app = described_class.allocate
     app.send :initialize
@@ -52,41 +52,70 @@ RSpec.describe IssueService do
 			}
 		}]
 	}
+end
 
-	it 'responds to :sort' do
-		expect(subject).to respond_to(:sort)
+RSpec.describe IssueService do
+	include_context 'common'
+
+	before do
+		esups.to_json
+	end
+	# it 'responds to :sort' do
+	# 	expect(subject).to respond_to(:sort)
+	# end
+
+	# it 'sorts by priority' do
+	# 	expect(subject.sort(esups)).to eq([esups[1], esups[0]])
+	# end
+
+
+	it 'responds to :new_to_acknowledge_prioritizer' do
+		expect(subject).to respond_to(:new_to_acknowledge_prioritizer).with(1).argument
 	end
 
-	it 'sorts by priority' do
-		expect(subject.sort(esups)).to eq([esups[1], esups[0]])
+	it 'responds to :slap' do
+		expect(subject).to respond_to(:slap).with(2).argument
 	end
 
-	it 'responds to :prioritizer' do
-		expect(subject).to respond_to(:prioritizer).with(1).argument
-	end
+	context 'the New to Acknowledge prioritizer' do
 
-	describe.context 'the Acknowledge prioritizer' do
-		it 'prioritizes new P0 tickets that are older than 10 min'
-		it 'prioritizes new P1 tickets that are older than 10 min'
-		it 'prioritizes new P2 tickets that are older than 24 hrs'
-		it 'prioritizes new P3 tickets that are older than 24 hrs'
-	end
+		# context 'with P0 tickets' do
+		# 	it 'prioritizes new P0 tickets that are older than 10 min'
+		# end
 
-	describe.context 'the Triage prioritizer' do
-		it 'prioritizes acknowledge P0 tickets that are older than 15 min'
-		it 'prioritizes acknowledge P1 tickets that are older than 30 min'
-		it 'prioritizes acknowledge P2 tickets that are older than 1 week'
-		it 'prioritizes acknowledge P3 tickets that are older than 1 week'
-	end
+		# context'with P1 tickets' do 
+		# 	it 'prioritizes new P1 tickets that are older than 10 min'
+		# end
 
-	describe.context 'the Response prioritizer' do
-		it 'prioritizes in progress P0 tickets that are older than 15 min'
-		it 'prioritizes in progress P1 tickets that are older than 30 min'
-		it 'prioritizes in progress P2 tickets that are older than 24 hrs'
-		it 'prioritizes in progress P3 tickets that are older that 48 hrs'
-	end
+		context 'with P2 tickets' do
+			it 'prioritizes new P2 tickets that are older than 24 hrs' do
+				expect(subject.new_to_acknowledge_prioritizer(esups)).to eq([esups[1]])
+			end
+		end
 
-	describe.context 'the Customer Response prioritizer' do
-		it 'prioritzes tickets newly marked as resolved'
-	end
+		context 'with P3 tickets' do
+			it 'prioritizes new P3 tickets that are older than 24 hrs' do
+				expect(subject.new_to_acknowledge_prioritizer(esups)).to eq([esups[0]])
+			end
+		end
+
+		end
+
+	# context 'the Triage prioritizer' do
+	# 	it 'prioritizes acknowledge P0 tickets that are older than 15 min'
+	# 	it 'prioritizes acknowledge P1 tickets that are older than 30 min'
+	# 	it 'prioritizes acknowledge P2 tickets that are older than 1 week'
+	# 	it 'prioritizes acknowledge P3 tickets that are older than 1 week'
+	# end
+
+	# context 'the Response prioritizer' do
+	# 	it 'prioritizes in progress P0 tickets that are older than 15 min'
+	# 	it 'prioritizes in progress P1 tickets that are older than 30 min'
+	# 	it 'prioritizes in progress P2 tickets that are older than 24 hrs'
+	# 	it 'prioritizes in progress P3 tickets that are older that 48 hrs'
+	# end
+
+	# context 'the Customer Response prioritizer' do
+	# 	it 'prioritzes tickets newly marked as resolved'
+	# end
 end
