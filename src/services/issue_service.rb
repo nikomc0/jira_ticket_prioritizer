@@ -12,11 +12,14 @@ class IssueService < Sinatra::Base
 		arr = []
 		
 		array.each do |item|
-			
+			id = item[:fields][:priority][:id]
+			status = item[:fields][:status][:name]
+			created = item[:fields][:created]
+
 			# Checks for P2 and P3 Tickets that are new and older than 24 hours.
-			if item[:fields][:priority][:id] === 10000 || item[:fields][:priority][:id] === 3
+			if id === 10000 || id === 3
 				# If the ticket is new and older than 24 hours add to the arr object
-				if self.slap(item[:fields][:status][:name], item[:fields][:created])
+				if self.slap(status, created)
 					arr.push(item)
 				end
 			end
