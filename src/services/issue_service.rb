@@ -14,7 +14,7 @@ class IssueService < Sinatra::Base
 		array.each do |item|
 			# P2 Tickets
 			if item[:fields][:priority][:id] === 10000
-				# item.slap(item[:fields][:status][:name], Date.parse(item[:fields][:created]) >= (3600 * 24))
+				self.slap(item[:fields][:status][:name], item[:fields][:created])
 			end
 		end
 
@@ -22,7 +22,8 @@ class IssueService < Sinatra::Base
 	end
 
 	def slap(status, created_date)
-		puts status
-		puts created_date
+		puts status === 'new'
+		puts DateTime.parse(created_date)
+		puts DateTime.now >= Date.parse(created_date) + (24/24)
 	end
 end
