@@ -25,7 +25,7 @@ RSpec.shared_context 'common' do
 					}
 				},
 				created: '2019-07-01T10:29:51.105-0700',
-				# created: DateTime.now.new_offset(Rational(0, 24)),
+				# created: DateTime.now.new_offset(Rational(0, 24)).to_s,
 				updated: '2019-08-06T22:10:10.724-0700',
 				lastViewed: '2019-08-06T11:53:14.534-0700',
 			}
@@ -47,8 +47,8 @@ RSpec.shared_context 'common' do
 						key: 'new',
 					}
 				},
-				# created: '2019-07-06T10:29:51.105-0700',
-				created: DateTime.now.new_offset(Rational(0, 24)).to_s,
+				created: '2019-07-06T10:29:51.105-0700',
+				# created: DateTime.now.new_offset(Rational(0, 24)).to_s,
 				updated: '2019-08-06T22:10:10.724-0700',
 				lastViewed: nil,
 			}
@@ -97,11 +97,26 @@ RSpec.describe IssueService do
 
 		context 'with P3 tickets' do
 			it 'prioritizes new P3 tickets that are older than 24 hrs' do
-				expect(subject.new_to_acknowledge_prioritizer(esups)).to eq([esups[0]])
+				esups.push({
+					key: 'ESUP-2040',
+					fields: {
+						priority:  {
+							iconUrl: 'https://demandbase.atlassian.net/images/icons/priorities/medium.svg',
+							name: 'P3 - Medium',
+							id: 3,
+						},
+						status: {
+							name: 'new',
+						},
+						created: '2019-07-01T10:29:51.105-0700',
+						# created: DateTime.now.new_offset(Rational(0, 24)).to_s,
+					}
+				})
+
+				expect(subject.new_to_acknowledge_prioritizer(esups)).to match_array([esups[1], esups[2]])
 			end
 		end
-
-		end
+	end
 
 	# context 'the Triage prioritizer' do
 	# 	it 'prioritizes acknowledge P0 tickets that are older than 15 min'
