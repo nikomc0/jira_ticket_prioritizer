@@ -60,7 +60,7 @@ RSpec.describe IssueService do
 	include_context 'common'
 
 	before do
-		esups.to_json
+		esups
 	end
 	# it 'responds to :sort' do
 	# 	expect(subject).to respond_to(:sort)
@@ -85,7 +85,7 @@ RSpec.describe IssueService do
 		# 	it 'prioritizes new P0 tickets that are older than 10 min'
 		# end
 
-		# context'with P1 tickets' do 
+		# context'with P1 tickets' do
 		# 	it 'prioritizes new P1 tickets that are older than 10 min'
 		# end
 
@@ -111,7 +111,7 @@ RSpec.describe IssueService do
 						created: '2019-07-01T10:29:51.105-0700',
 						# created: DateTime.now.new_offset(Rational(0, 24)).to_s,
 					}
-				})
+				}.to_json)
 
 				expect(subject.new_to_acknowledge_prioritizer(esups)).to match_array([esups[1], esups[2]])
 			end

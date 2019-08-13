@@ -30,12 +30,12 @@
 
 			<main class="main">
 				<div class="main-overview">
-				<% esups.each do |issue| %>
-					<div class="overviewcard">
-						<div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{issue.key}" %>> <%= "#{issue.key}" %> </a> </div>
-						<div class="overviewcard__esup-title"> <%= "#{issue.summary}" %> </div>
-						<img src=<%= "#{issue.priority.iconUrl}" %> width="16px" height="16px" ><%= "#{issue.issuetype.name} - #{issue.priority.name}" %>
-					</div>
+					<% issue_test.each do |item| %>
+						<div class="overviewcard">
+							<div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{item.key}" %>> <%= "#{item.key}" %> </a> </div>
+							<div class="overviewcard__esup-title"> <%= "#{item.summary}" %> </div>
+							<img src=<%= "#{item.priority.iconUrl}" %> width="16px" height="16px" ><%= "#{item.issuetype.name} - #{item.priority.name}" %>
+						</div>
 					<% end %>
 				</div>
 			</main>
