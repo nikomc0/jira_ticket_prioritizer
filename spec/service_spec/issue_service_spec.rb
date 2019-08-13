@@ -7,7 +7,7 @@ RSpec.shared_context 'common' do
     app
   end
 
-	let(:esups) {
+	let(:esups) { 
 		[{
 			key: 'ESUP-2033',
 			fields: {
@@ -96,7 +96,7 @@ RSpec.describe IssueService do
 		end
 
 		context 'with P3 tickets' do
-			it 'prioritizes new P3 tickets that are older than 24 hrs' do
+			it 'prioritizes new P3 tickets that are older than 24 hrs' do		
 				esups.push({
 					key: 'ESUP-2040',
 					fields: {
@@ -111,7 +111,7 @@ RSpec.describe IssueService do
 						created: '2019-07-01T10:29:51.105-0700',
 						# created: DateTime.now.new_offset(Rational(0, 24)).to_s,
 					}
-				}.to_json)
+				})
 
 				expect(subject.new_to_acknowledge_prioritizer(esups)).to match_array([esups[1], esups[2]])
 			end
@@ -132,7 +132,25 @@ RSpec.describe IssueService do
 	# 	it 'prioritizes in progress P3 tickets that are older that 48 hrs'
 	# end
 
-	# context 'the Customer Response prioritizer' do
-	# 	it 'prioritzes tickets newly marked as resolved'
-	# end
+	context 'the Customer Response prioritizer' do
+		before do
+			esups.push({key: 'ESUP-2040',
+					fields: {
+						priority:  {
+							iconUrl: 'https://demandbase.atlassian.net/images/icons/priorities/medium.svg',
+							name: 'P3 - Medium',
+							id: 3,
+						},
+						status: {
+							name: 'new',
+						},
+						created: '2019-07-01T10:29:51.105-0700',
+						# created: DateTime.now.new_offset(Rational(0, 24)).to_s,
+					}})
+		end
+
+		it 'prioritzes tickets newly marked as resolved' do
+	
+		end
+	end
 end

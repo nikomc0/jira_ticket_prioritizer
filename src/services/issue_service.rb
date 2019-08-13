@@ -1,6 +1,5 @@
 require 'sinatra'
 require 'sinatra/base'
-require 'json'
 
 class IssueService
 	# Enter Sorting Logic to filter tickets based on Priority
@@ -16,13 +15,18 @@ class IssueService
 			status = item.status.name
 			created = item.created
 
-			# Checks for P2 and P3 Tickets that are new and older than 24 hours.
+			# Checks for P2 and P3 Tickets
 			if id === '10000' || id === '3'
 
 				# If the ticket is new and older than 24 hours add to the arr object
 				if self.slap(status, created)
 					arr.push(item)
-				end
+				elsif self.customer_response(status)
+					
+					# item.merge(:test => 'Ping Customer')
+
+					arr.push(item)
+					end
 			end
 		end
 
@@ -33,6 +37,13 @@ class IssueService
 		created_date = DateTime.parse(created_date)
 
 		if status === 'New' && DateTime.now >= created_date + (24/24)
+			true
+		end
+	end
+
+	def customer_response(status)
+		puts status
+		if status.downcase === 'resolved'
 			true
 		end
 	end
