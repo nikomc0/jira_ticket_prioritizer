@@ -1,50 +1,69 @@
 require 'sinatra'
 require 'sinatra/base'
+require 'csv'
 
-class IssueService
-	# Enter Sorting Logic to filter tickets based on Priority
-	def sort
-		["test", "test2"]
+class Prioritizer
+	attr_accessor :tickets
+
+	def initialize (tickets, array = [])
+		@tickets = tickets
+		@array = array
 	end
 
-	def new_to_acknowledge_prioritizer(array)
-		arr = []
-
-		array.each do |item|
-			id = item.priority.id
-			status = item.status.name
-			created = item.created
-
-			# Checks for P2 and P3 Tickets
-			if id === '10000' || id === '3'
-
-				# If the ticket is new and older than 24 hours add to the arr object
-				if self.slap(status, created)
-					arr.push(item)
-				elsif self.customer_response(status)
-					
-					# item.merge(:test => 'Ping Customer')
-
-					arr.push(item)
-					end
-			end
+	# iterates over the array
+	def get_tickets
+		puts "Getting Tickets..."
+		@tickets.each do |ticket|
+			ticket_status(ticket)
 		end
-
-		arr
 	end
 
-	def slap(status, created_date)
-		created_date = DateTime.parse(created_date)
+	# Checks for only P2 and P3 tickets
+	def ticket_status(ticket)
+		puts "Checking Ticket Status"
+
+		id = ticket.priority.id
+		status = ticket.status.name
+		created = ticket.created
+
+		if id === '10000' || id === '3'
+			slap(ticket, status, created)
+		end
+	end
+
+	# Checks for SLA breach
+	def slap(ticket, status, created_date)
+		puts "Checking if the ticket breached SLA"
+		created_date = Date.parse(created_date)
 
 		if status === 'New' && DateTime.now >= created_date + (24/24)
-			true
+			add_to_ticket_list(ticket)
+		else
+			puts 'Sending to get action item'
+			action_item(ticket, status)
 		end
 	end
 
-	def customer_response(status)
-		puts status
-		if status.downcase === 'resolved'
-			true
+	# Assigns an Action Item
+	def action_item(ticket, status)
+		puts "Assigning an action item"
+		puts ticket.key
+		customer = 'Ping Customer'
+		engineer = 'Ping Engineer'
+		support = 'QA'
+		pm = 'Ping Product Manager'
+
+		if status.downcase === 'resolved' || status.downcase === 'fixed in production'
+			ticket.attrs.merge!(action: customer)
+			ticket
+			add_to_ticket_list(ticket)
 		end
+	end
+
+	# Add to the array
+	def add_to_ticket_list(ticket)
+		puts "Adding to the array"
+		@array.push(ticket)
+		@array
 	end
 end

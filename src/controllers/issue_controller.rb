@@ -22,40 +22,35 @@ class IssueController < Sinatra::Base
 		}
 
 	@@client = JIRA::Client.new(options)
-
 	# @esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
-	# @unassigned = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND ASSIGNEE is EMPTY')
 
 	# pp @esups[0]
-	# pp @unassigned
 
 	def esups
-		@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
+		esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug") AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
+		priority_tickets = Prioritizer.new(esups).get_tickets
 	end
 
-	def issue_test
-		esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge", "resolved")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
-		IssueService.new.new_to_acknowledge_prioritizer(esups)
+	def array
+		puts 'worked'
 	end
+
+	def priority_tickets
+		esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug") AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
+		@priority_tickets = Prioritizer.new(esups).get_tickets
+	end
+
 
 	def unassigned
 		@unassigned = @@client.Issue.jql('PROJECT = "ESUP" AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND ISSUETYPE in ("Bug", "Task") AND ASSIGNEE is EMPTY')
 	end
 
-	def support_engineer
-		@esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("klange") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :description], max_results: 1000)
-	end
-
 	get '/' do
-		@user = @@client.options[:username]
+		# @user = @@client.options[:username]
 		erb :index
 	end
 
 	get '/unassigned' do
 		erb :unassigned
-	end
-
-	get '/kevin' do
-		erb :kevin
 	end
 end
