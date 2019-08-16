@@ -26,10 +26,10 @@ class IssueController < ApplicationController
 
 	# pp esups[0..4]
 
-	fields = @@client.Field.all
-	fields.each do |item|
-		pp item.key
-	end
+	# fields = @@client.Field.all
+	# fields.each do |item|
+	# 	pp item.key
+	# end
 
 	@@prioritizer = TicketPrioritizer::Prioritizer.new(esups)
 
