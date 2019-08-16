@@ -30,10 +30,19 @@ module TicketPrioritizer
 
 		def slap(ticket, status, created_date, type)
 			created_date = DateTime.parse(created_date).utc
+			duedate = ticket.attrs[:duedate]
 
+			# New to Acknowledge Breach
 			if status === 'new' && type === 'bug' && DateTime.now.utc >= created_date + (3600 * 24)
-				ticket.attrs[:breach] = true
+				ticket.attrs[:breach] = 'new'
 				action_item(ticket, status)
+
+			# Triage Breach 
+			elsif status === 'acknowledge' && duedate === nil
+				ticket.attrs[:breach] = 'triage'
+				action_item(ticket, status)
+
+			# Regular ticket
 			else
 				action_item(ticket, status)
 			end
@@ -42,8 +51,10 @@ module TicketPrioritizer
 		def action_item(ticket, status)
 			customer = 'Ping Customer'
 			support = 'QA'
-			# engineer = 'Ping Engineer'
+			assignee = "Ping #{ticket.assignee.displayName}"
 			pm = 'Ping Product Manager'
+
+			action = ticket.attrs[:action]
 
 			if status === 'fixed in prod'
 				ticket.attrs[:action] = customer
@@ -51,8 +62,11 @@ module TicketPrioritizer
 			elsif status === 'resolved'
 				ticket.attrs[:action] = support
 				add_to_ticket_list(ticket)
-			elsif ticket.attrs[:breach] === true
+			elsif ticket.attrs[:breach] === 'new'
 				ticket.attrs[:action] = pm
+				add_to_ticket_list(ticket)
+			elsif ticket.attrs[:breach] === 'triage'
+				ticket.attrs[:action] = assignee
 				add_to_ticket_list(ticket)
 			end
 		end

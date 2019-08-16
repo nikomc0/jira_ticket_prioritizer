@@ -24,11 +24,6 @@ class IssueController < Sinatra::Base
 		:read_timeout => 120
 	}
 
-
-# curl --request GET \
-#   --url '/rest/atlassian-connect/1/app/module/dynamic' \
-#   --header 'Accept: application/json'
-
 	@@client = JIRA::Client.new(options)
 
 	esups = @@client.Issue.jql(
@@ -36,7 +31,7 @@ class IssueController < Sinatra::Base
 		# fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator],
 		max_results: 1000)
 
-	pp esups[0..4]
+	# pp esups[0..4]
 
 	@@prioritizer = TicketPrioritizer::Prioritizer.new(esups)
 
