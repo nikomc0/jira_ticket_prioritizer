@@ -18,20 +18,25 @@ class IssueController < Sinatra::Base
 	options = {
 		:username => ENV['USERNAME'],
 		:password => ENV['API_TOKEN'],
-		:site     => 'https://demandbase.atlassian.net', # or 'https://<your_subdomain>.atlassian.net'
+		:site     => 'https://demandbase.atlassian.net/rest/atlassian-connect/1/app/module/dynamic', # or 'https://<your_subdomain>.atlassian.net'
 		:context_path => '', # often blank
 		:auth_type => :basic,
 		:read_timeout => 120
 	}
 
+
+# curl --request GET \
+#   --url '/rest/atlassian-connect/1/app/module/dynamic' \
+#   --header 'Accept: application/json'
+
 	@@client = JIRA::Client.new(options)
 
 	esups = @@client.Issue.jql(
 		'PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("ddelbosque", "balbini", "jluse", "apaley")',
-		fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator],
+		# fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator],
 		max_results: 1000)
 
-	pp esups[0..3]
+	pp esups[0..4]
 
 	@@prioritizer = TicketPrioritizer::Prioritizer.new(esups)
 

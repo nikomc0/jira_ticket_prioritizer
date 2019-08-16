@@ -32,7 +32,8 @@ module TicketPrioritizer
 			created_date = DateTime.parse(created_date).utc
 
 			if status === 'new' && type === 'bug' && DateTime.now.utc >= created_date + (3600 * 24)
-				add_to_ticket_list(ticket)
+				ticket.attrs[:breach] = true
+				action_item(ticket, status)
 			else
 				action_item(ticket, status)
 			end
@@ -42,13 +43,16 @@ module TicketPrioritizer
 			customer = 'Ping Customer'
 			support = 'QA'
 			# engineer = 'Ping Engineer'
-			# pm = 'Ping Product Manager'
+			pm = 'Ping Product Manager'
 
 			if status === 'fixed in prod'
 				ticket.attrs[:action] = customer
 				add_to_ticket_list(ticket)
 			elsif status === 'resolved'
 				ticket.attrs[:action] = support
+				add_to_ticket_list(ticket)
+			elsif ticket.attrs[:breach] === true
+				ticket.attrs[:action] = pm
 				add_to_ticket_list(ticket)
 			end
 		end
