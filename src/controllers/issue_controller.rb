@@ -24,29 +24,23 @@ class IssueController < Sinatra::Base
 		:read_timeout => 120
 	}
 
-	
 	@@client = JIRA::Client.new(options)
-	
-	esups = @@client.Issue.jql('PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("ddelbosque", "balbini", "jluse", "apaley") AND STATUS in ("new", "In Progress", "acknowledge")', fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator], max_results: 1000)
-	
+
+	esups = @@client.Issue.jql(
+		'PROJECT = "ESUP" AND ISSUETYPE in ("Bug", "Task") AND CREATOR in ("ddelbosque", "balbini", "jluse", "apaley")',
+		fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator],
+		max_results: 1000)
+
+	pp esups[0..3]
+
 	@@prioritizer = TicketPrioritizer::Prioritizer.new(esups)
 
 	def priority_tickets
-		@@prioritizer.get_tickets
-	end
-
-
-	def unassigned
-		@unassigned = @@client.Issue.jql('PROJECT = "ESUP" AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley") AND ISSUETYPE in ("Bug", "Task") AND ASSIGNEE is EMPTY')
+		@@prioritizer.get_array
 	end
 
 	get '/' do
 		# @user = @@client.options[:username]
 		erb :index
 	end
-
-	get '/unassigned' do
-		erb :unassigned
-	end
 end
-

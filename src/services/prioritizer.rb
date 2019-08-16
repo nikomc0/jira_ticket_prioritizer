@@ -11,62 +11,54 @@ module TicketPrioritizer
 			@array = array
 		end
 
-		# iterates over the array
 		def get_tickets
-			puts "Getting Tickets..."
 			@tickets.each do |ticket|
 				ticket_status(ticket)
 			end
 		end
 
-		# Checks for only P2 and P3 tickets
 		def ticket_status(ticket)
-			puts "Checking Ticket Status"
-
 			id = ticket.priority.id
-			status = ticket.status.name
+			status = ticket.status.name.downcase
 			created = ticket.created
+			type = ticket.issuetype.name.downcase
 
 			if id === '10000' || id === '3'
-				slap(ticket, status, created)
+				slap(ticket, status, created, type)
 			end
 		end
 
-		# Checks for SLA breach
-		def slap(ticket, status, created_date)
-			puts "Checking if the ticket breached SLA"
-			created_date = Date.parse(created_date)
+		def slap(ticket, status, created_date, type)
+			created_date = DateTime.parse(created_date).utc
 
-			if status === 'New' && DateTime.now >= created_date + (24/24)
+			if status === 'new' && type === 'bug' && DateTime.now.utc >= created_date + (3600 * 24)
 				add_to_ticket_list(ticket)
 			else
-				puts 'Sending to get action item'
 				action_item(ticket, status)
 			end
 		end
 
-		# Assigns an Action Item
 		def action_item(ticket, status)
-			puts "Assigning an action item"
-			puts ticket.key
 			customer = 'Ping Customer'
-			engineer = 'Ping Engineer'
 			support = 'QA'
-			pm = 'Ping Product Manager'
+			# engineer = 'Ping Engineer'
+			# pm = 'Ping Product Manager'
 
-
-			puts status.downcase === 'resolved' || status.downcase === 'fixed in production'
-			
-			if status.downcase === 'resolved' || status.downcase === 'fixed in production'
-				ticket.attrs.merge!(action: customer)
+			if status === 'fixed in prod'
+				ticket.attrs[:action] = customer
+				add_to_ticket_list(ticket)
+			elsif status === 'resolved'
+				ticket.attrs[:action] = support
 				add_to_ticket_list(ticket)
 			end
 		end
 
-		# Add to the array
 		def add_to_ticket_list(ticket)
-			puts "Adding to the array"
 			@array.push(ticket)
+		end
+
+		def get_array
+			get_tickets
 			@array
 		end
 	end
