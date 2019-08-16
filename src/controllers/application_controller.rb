@@ -1,9 +1,4 @@
-require 'dotenv'
-require 'pp'
-require 'jira-ruby'
 require 'sinatra'
-
-Dotenv.load('.env')
 
 class ApplicationController < Sinatra::Base
 	configure do

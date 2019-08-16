@@ -35,7 +35,17 @@
 							<div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{item.key}" %>> <%= "#{item.key}" %> </a> </div>
 							<div class="overviewcard__esup-title"> <%= "#{item.summary}" %> </div>
 							<img src=<%= "#{item.priority.iconUrl}" %> width="16px" height="16px" ><%= "#{item.issuetype.name} - #{item.priority.name}" %>
-							<div><%= item.attrs[:action] %></div>
+							<div><%= item.reporter.displayName%></div>
+							<div>
+								<p>To Do</p>
+								<%= item.attrs[:action] %>
+							</div>
+							<div>
+								<% if item.attrs[:breach]%>
+									<p>Breach</p>
+									<%= item.attrs[:breach]%>
+								<% end %>
+							</div>
 						</div>
 					<% end %>
 				</div>

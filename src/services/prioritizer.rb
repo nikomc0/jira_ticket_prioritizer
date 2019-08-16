@@ -38,7 +38,7 @@ module TicketPrioritizer
 				action_item(ticket, status)
 
 			# Triage Breach 
-			elsif status === 'acknowledge' && duedate === nil
+			elsif status === 'acknowledge' && type === 'bug' && duedate === nil
 				ticket.attrs[:breach] = 'triage'
 				action_item(ticket, status)
 
@@ -55,6 +55,7 @@ module TicketPrioritizer
 			pm = 'Ping Product Manager'
 
 			action = ticket.attrs[:action]
+			breach = ticket.attrs[:breach]
 
 			if status === 'fixed in prod'
 				ticket.attrs[:action] = customer
@@ -62,10 +63,10 @@ module TicketPrioritizer
 			elsif status === 'resolved'
 				ticket.attrs[:action] = support
 				add_to_ticket_list(ticket)
-			elsif ticket.attrs[:breach] === 'new'
+			elsif breach === 'new'
 				ticket.attrs[:action] = pm
 				add_to_ticket_list(ticket)
-			elsif ticket.attrs[:breach] === 'triage'
+			elsif breach === 'triage'
 				ticket.attrs[:action] = assignee
 				add_to_ticket_list(ticket)
 			end
