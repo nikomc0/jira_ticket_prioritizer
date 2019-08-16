@@ -19,22 +19,32 @@
 
 			<div class="side-bar">
 				<h1 class="side-bar__title">SLAP</h1>
+				<div class="side-bar-wrapper">
 				<ul class="side-bar__priority">
 					<li class="side-bar__priority-item">P0</li>
 					<li class="side-bar__priority-item">P1</li>
 					<li class="side-bar__priority-item">P2</li>
 					<li class="side-bar__priority-item">P3</li>
 				</ul>
-
+			</div>
 			</div>
 
 			<main class="main">
+				<div class="main-labels">
+					<div class="label-1">ESUP #</div>
+					<div class="label-2">Title</div>
+					<div class="label-3">Issue Type</div>
+					<div class="label-4">Creator</div>
+					<div class="label-6">To Do</div>
+					<div class="label-7">Priority</div>
+					<div class="label-8">Breach</div>
+				</div>
 				<div class="main-overview">
 					<% priority_tickets.each do |item| %>
 						<div class="overviewcard">
 							<div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{item.key}" %>> <%= "#{item.key}" %> </a> </div>
 							<div class="overviewcard__esup-title"> <%= "#{item.summary}" %> </div>
-							<img src=<%= "#{item.priority.iconUrl}" %> width="16px" height="16px" ><%= "#{item.issuetype.name} - #{item.priority.name}" %>
+							<%= "#{item.issuetype.name} - #{item.priority.name}" %>
 							<div><%= item.reporter.displayName%></div>
 							<div>
 								<p>To Do</p>
