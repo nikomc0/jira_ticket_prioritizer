@@ -19,12 +19,12 @@ class IssueController < ApplicationController
 	@@client = JIRA::Client.new(options)
 
 	esups = @@client.Issue.jql(
-		'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task") 
+		'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
 		AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
 		# fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator],
 		max_results: 1000)
 
-	# pp esups[0..4]
+	pp esups[0].duedate
 
 	# fields = @@client.Field.all
 	# fields.each do |item|
