@@ -18,27 +18,32 @@ class IssueController < ApplicationController
 
 	@@client = JIRA::Client.new(options)
 
-	esups = @@client.Issue.jql(
-		'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
-		AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
-		# fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator],
-		max_results: 1000)
+	@esups = []
 
-	pp esups[0].duedate
+	def self.get_issues
+		esups = []
+			loop do 
+				issues = @@client.Issue.jql(
+					'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
+					AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+					max_results: 100, start_at: esups.size)
+				esups.push(*issues)
+			break if issues.size == 0
+			end
 
-	# fields = @@client.Field.all
-	# fields.each do |item|
-	# 	pp item.key
-	# end
+		@esups = esups
+	end
 
-	@@prioritizer = TicketPrioritizer::Prioritizer.new(esups)
+	IssueController.get_issues
+
+	@@prioritizer = TicketPrioritizer::Prioritizer.new(@esups)
 
 	def priority_tickets
 		@@prioritizer.get_array
 	end
 
 	get '/' do
-		# @user = @@client.options[:username]
+		@user = @@client.options[:username]
 		erb :index
 	end
 end
