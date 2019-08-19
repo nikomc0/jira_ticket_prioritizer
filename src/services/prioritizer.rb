@@ -1,5 +1,4 @@
 require 'sinatra'
-require 'csv'
 
 module TicketPrioritizer
 
@@ -22,23 +21,43 @@ module TicketPrioritizer
 			status = ticket.status.name.downcase
 			created = ticket.created
 			type = ticket.issuetype.name.downcase
+			duedate = ticket.duedate
 
 			if id === '10000' || id === '3'
-				slap(ticket, status, created, type)
+				slap(ticket, status, created, type, duedate)
 			end
 		end
 
-		def slap(ticket, status, created_date, type)
+		def slap(ticket, status, created_date, type, duedate)
 			created_date = DateTime.parse(created_date).utc
-			duedate = ticket.attrs[:duedate]
+			puts ticket.key
+
 
 			# New to Acknowledge Breach
 			if status === 'new' && type === 'bug' && DateTime.now.utc >= created_date + (3600 * 24)
 				ticket.attrs[:breach] = 'new'
 				action_item(ticket, status)
 
-			# Triage Breach 
-			elsif status === 'acknowledge' && type === 'bug' && duedate === nil
+			# Triage Breach
+			# project = ESUP
+			# AND priority in ("P2 - Major", "P3 - Medium")
+			# AND type = Bug
+			# AND created < -7d
+			# AND duedate is EMPTY
+			# AND status not in (Closed, Resolved, Done)
+			# ORDER BY "Solution / Product Area", created, priority, key ASC
+
+			elsif type === 'bug' && status != 'closed' && status != 'resolved' && status != 'done' && duedate === nil && created_date <= DateTime.now.utc - 7 * (3600 * 24)
+				puts "duedate: #{duedate}"
+				puts "type #{type} equal to bug: #{type === 'bug'}"
+				puts "status #{status} not equal to closed: #{status != 'closed'}"
+				puts "status #{status} not equal to resolved: #{status != 'resolved'}"
+				puts "status #{status} not equal to done: #{status != 'done'}"
+				puts "due date #{duedate} is empty: #{duedate === nil}"
+				puts "created date #{created_date} vs. #{DateTime.now.utc - 7 * (3600 * 24)}"
+				puts "created date #{created_date} is greater than #{DateTime.now.utc - 7 * (3600 * 24)}: #{created_date <= DateTime.now.utc - 7 * (3600 * 24)}"
+				puts
+
 				ticket.attrs[:breach] = 'triage'
 				action_item(ticket, status)
 
@@ -51,7 +70,7 @@ module TicketPrioritizer
 		def action_item(ticket, status)
 			customer = 'Ping Customer'
 			support = 'QA'
-			assignee = "Ping #{ticket.assignee.displayName}"
+			assignee = "Ping Product"
 			pm = 'Ping Product Manager'
 
 			action = ticket.attrs[:action]
@@ -78,6 +97,7 @@ module TicketPrioritizer
 
 		def get_array
 			get_tickets
+			puts @tickets.count
 			@array
 		end
 	end
