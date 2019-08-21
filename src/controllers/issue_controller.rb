@@ -50,7 +50,7 @@ class IssueController < ApplicationController
 	@@tasks = TicketPrioritizer::Tasks.new(@data)
 
 	def priority_tickets
-		@@bugs.get_array
+		# @@bugs.get_array
 		@@tasks.get_array
 	end
 
