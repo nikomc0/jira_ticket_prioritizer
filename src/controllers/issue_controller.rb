@@ -19,12 +19,12 @@ class IssueController < ApplicationController
 	@@client = JIRA::Client.new(options)
 	@data = {
 		bugs: @@client.Issue.jql(
-			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
+			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug")
 				AND created > -30d
 				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
 				max_results: 100),
 		tasks: @@client.Issue.jql(
-			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
+			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Task")
 				AND created > -30d
 				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
 				max_results: 100)
@@ -50,8 +50,9 @@ class IssueController < ApplicationController
 	@@tasks = TicketPrioritizer::Tasks.new(@data)
 
 	def priority_tickets
-		# @@bugs.get_array
-		@@tasks.get_array
+		bugs = @@bugs.get_array 
+		tasks = @@tasks.get_array
+		bugs.concat(tasks)
 	end
 
 	get '/' do

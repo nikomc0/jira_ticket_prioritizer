@@ -31,17 +31,16 @@ module TicketPrioritizer
 		def add_to_ticket_list(ticket)
 			@array.push(ticket)
 		end
-
-		def get_array
-			# get_tickets(@bugs)
-			get_tickets(tickets)
-			@array
-		end
 	end
 
 	class Bugs < Prioritizer
 		def post_initialize(args)
 			@bugs = args[:bugs]
+		end
+
+		def get_array
+			get_tickets(@bugs)
+			@array
 		end
 		
 		def ticket_status(ticket)
@@ -112,8 +111,9 @@ module TicketPrioritizer
 			@tasks = args[:tasks]
 		end
 
-		def get_array(tasks)
-			super()
+		def get_array
+			get_tickets(@tasks)
+			@array
 		end
 		# Assign specific action items
 	end
