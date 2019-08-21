@@ -17,29 +17,42 @@ class IssueController < ApplicationController
 	}
 
 	@@client = JIRA::Client.new(options)
+	@data = {
+		bugs: @@client.Issue.jql(
+			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug")
+				AND created > -30d
+				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+				max_results: 100),
+		tasks: @@client.Issue.jql(
+			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Task")
+				AND created > -30d
+				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+				max_results: 100)
+	}
 
-	@esups = []
+	# def self.get_issues
+	# 	esups = []
+	# 		loop do 
+	# 			issues = @@client.Issue.jql(
+	# 				'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
+	# 				AND created > -30d
+	# 				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+	# 				max_results: 100, start_at: esups.size)
+	# 			esups.push(*issues)
+	# 		break if issues.size == 0
+	# 		end
 
-	def self.get_issues
-		esups = []
-			loop do 
-				issues = @@client.Issue.jql(
-					'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
-					AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
-					max_results: 100, start_at: esups.size)
-				esups.push(*issues)
-			break if issues.size == 0
-			end
-
-		@esups = esups
-	end
-
-	IssueController.get_issues
-
-	@@prioritizer = TicketPrioritizer::Prioritizer.new(@esups)
+	# 	@data[:esups] = esups
+	# end
+	
+	# get_issues
+	@@bugs = TicketPrioritizer::Bugs.new(@data)
+	@@tasks = TicketPrioritizer::Tasks.new(@data)
 
 	def priority_tickets
-		@@prioritizer.get_array
+		bugs = @@bugs.get_array 
+		tasks = @@tasks.get_array
+		bugs.concat(tasks)
 	end
 
 	get '/' do
