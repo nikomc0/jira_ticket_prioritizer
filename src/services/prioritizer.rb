@@ -5,69 +5,79 @@ module TicketPrioritizer
 	class Prioritizer
 		attr_accessor :tickets
 
-		def initialize (tickets, array = [])
-			@tickets = tickets
+		def initialize (args, array = [])
 			@array = array
+			post_initialize(args)
 		end
 
-		def get_tickets
-			@tickets.each do |ticket|
+		def post_initialize(args)
+			nil
+		end
+
+		def get_tickets(tickets)
+			tickets.each do |ticket|
 				ticket_status(ticket)
 			end
 		end
 
+		def ticket_status(ticket)
+			action_item(ticket)
+		end
+
+		def action_item(ticket)
+			add_to_ticket_list(ticket)
+		end
+
+		def add_to_ticket_list(ticket)
+			@array.push(ticket)
+		end
+
+		def get_array
+			get_tickets(@bugs)
+			get_tickets(@tasks)
+			@array
+		end
+	end
+
+	class Bugs < Prioritizer
+		def post_initialize(args)
+			@bugs = args[:bugs]
+		end
+		
 		def ticket_status(ticket)
 			id = ticket.priority.id
 			status = ticket.status.name.downcase
 			created = ticket.created
 			type = ticket.issuetype.name.downcase
 			duedate = ticket.duedate
-
+			
 			if id === '10000' || id === '3'
 				slap(ticket, status, created, type, duedate)
 			end
 		end
 
+		# Checks SLA requirements
 		def slap(ticket, status, created_date, type, duedate)
 			created_date = DateTime.parse(created_date).utc
-			puts ticket.key
-
 
 			# New to Acknowledge Breach
 			if status === 'new' && type === 'bug' && DateTime.now.utc >= created_date + (3600 * 24)
 				ticket.attrs[:breach] = 'new'
-				action_item(ticket, status)
+				action_item(ticket)
 
 			# Triage Breach
-			# project = ESUP
-			# AND priority in ("P2 - Major", "P3 - Medium")
-			# AND type = Bug
-			# AND created < -7d
-			# AND duedate is EMPTY
-			# AND status not in (Closed, Resolved, Done)
-			# ORDER BY "Solution / Product Area", created, priority, key ASC
-
 			elsif type === 'bug' && status != 'closed' && status != 'resolved' && status != 'done' && duedate === nil && created_date <= DateTime.now.utc - 7 * (3600 * 24)
-				puts "duedate: #{duedate}"
-				puts "type #{type} equal to bug: #{type === 'bug'}"
-				puts "status #{status} not equal to closed: #{status != 'closed'}"
-				puts "status #{status} not equal to resolved: #{status != 'resolved'}"
-				puts "status #{status} not equal to done: #{status != 'done'}"
-				puts "due date #{duedate} is empty: #{duedate === nil}"
-				puts "created date #{created_date} vs. #{DateTime.now.utc - 7 * (3600 * 24)}"
-				puts "created date #{created_date} is greater than #{DateTime.now.utc - 7 * (3600 * 24)}: #{created_date <= DateTime.now.utc - 7 * (3600 * 24)}"
-				puts
-
 				ticket.attrs[:breach] = 'triage'
-				action_item(ticket, status)
+				action_item(ticket)
 
 			# Regular ticket
 			else
-				action_item(ticket, status)
+				action_item(ticket)
 			end
 		end
 
-		def action_item(ticket, status)
+		def action_item(ticket)
+			status = ticket.status.name
 			customer = 'Ping Customer'
 			support = 'QA'
 			assignee = "Ping Product"
@@ -91,14 +101,14 @@ module TicketPrioritizer
 			end
 		end
 
-		def add_to_ticket_list(ticket)
-			@array.push(ticket)
-		end
+		# Checks / Assign Breach
+		# Assign specific action items
+	end
 
-		def get_array
-			get_tickets
-			puts @tickets.count
-			@array
+	class Tasks < Prioritizer
+		def post_initialize(args)
+			@tasks = args[:tasks]
 		end
+		# Assign specific action items
 	end
 end
