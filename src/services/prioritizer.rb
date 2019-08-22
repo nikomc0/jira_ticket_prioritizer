@@ -1,4 +1,5 @@
 require 'sinatra'
+require_relative 'action'
 
 module TicketPrioritizer
 
@@ -22,10 +23,6 @@ module TicketPrioritizer
 
 		def ticket_status(ticket)
 			action_item(ticket)
-		end
-
-		def action_item(ticket)
-			add_to_ticket_list(ticket)
 		end
 
 		def add_to_ticket_list(ticket)
@@ -99,14 +96,9 @@ module TicketPrioritizer
 				add_to_ticket_list(ticket)
 			end
 		end
-
-		# Checks / Assign Breach
-		# Assign specific action items
 	end
 
 	class Tasks < Prioritizer
-		attr_accessor :tasks
-
 		def post_initialize(args)
 			@tasks = args[:tasks]
 		end
@@ -115,6 +107,12 @@ module TicketPrioritizer
 			get_tickets(@tasks)
 			@array
 		end
+
+		def action_item(ticket)
+			Action.new(ticket)
+			add_to_ticket_list(ticket)
+		end
+
 		# Assign specific action items
 	end
 end
