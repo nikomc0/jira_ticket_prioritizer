@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <div class="main-overview">
+    <% priority_tickets.each do |item| %>
+        
+        <div class="overviewcard">
+            <div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{item.key}" %>> <%= "#{item.key}" %> </a> </div>
+            <div class="overviewcard__esup-title"> <%= "#{item.summary}" %> </div>
+            <%= "#{item.issuetype.name} - #{item.priority.name}" %>
+            <div><%= item.reporter.displayName%></div>
+            <div>
+                <p>To Do</p>
+                <%= item.attrs[:action] %>
+            </div>
+            <div>
+                <% if item.attrs[:breach]%>
+                    <p>Breach</p>
+                    <%= item.attrs[:breach]%>
+                <% end %>
+            </div>
+        </div>
+    
+    <% end %>
+</div>
+</html>

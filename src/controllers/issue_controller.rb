@@ -49,14 +49,42 @@ class IssueController < ApplicationController
 	@@bugs = TicketPrioritizer::Bugs.new(@data)
 	@@tasks = TicketPrioritizer::Tasks.new(@data)
 
+	# @p3 = @@client.Issue.jql('PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug") AND created > -30d AND PRIORITY in ("Bug - P3 - Medium", "Task - P3 - Medium") AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")', max_results: 100)
+
 	def priority_tickets
 		bugs = @@bugs.get_array 
 		tasks = @@tasks.get_array
 		bugs.concat(tasks)
 	end
 
+
 	get '/' do
 		@user = @@client.options[:username]
 		erb :index
 	end
+
+	get '/p3' do
+		@data
+		print @data
+		erb :'/p3'
+	end
+
+	get '/p2' do
+		@data
+		puts @data
+		erb :'/p2'
+	end
+
+	get '/p1' do
+		@data
+		puts @data
+		erb :'/p1'
+	end
+
+	get '/p0' do
+		@data
+		puts @data
+		erb :'/p0'
+	end
+	
 end
