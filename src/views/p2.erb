@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -19,7 +18,7 @@
 			</header>
 
 			<div class="side-bar">
-				<h1 class="side-bar__title"><a href="/">SLAP</a></h1>
+            <h1 class="side-bar__title"><a href="/">SLAP</a></h1>
 				<div class="side-bar-wrapper">
 				<ul class="side-bar__priority">
 					<li class="side-bar__priority-item"><a class="link" href="/p0">P0</a></li>
@@ -44,25 +43,27 @@
 					<div class="label-8">Breach</div>
 				</div>
 				<div class="main-overview">
-					<% priority_tickets.each do |item| %>
-						<div class="overviewcard">
-							<div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{item.key}" %>> <%= "#{item.key}" %> </a> </div>
-							<div class="overviewcard__esup-title"> <%= "#{item.summary}" %> </div>
-							<%= "#{item.issuetype.name} - #{item.priority.name}" %>
-							<div><%= item.reporter.displayName%></div>
-							<div>
-								<p>To Do</p>
-								<%= item.attrs[:action] %>
-							</div>
-							<div>
-								<% if item.attrs[:breach]%>
-									<p>Breach</p>
-									<%= item.attrs[:breach]%>
-								<% end %>
-							</div>
-						</div>
-					<% end %>
-				</div>
+    <% priority_tickets.each do |item| %>
+        <% if item.priority.name === "P2 - Major" %>
+        <div class="overviewcard">
+            <div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{item.key}" %>> <%= "#{item.key}" %> </a> </div>
+            <div class="overviewcard__esup-title"> <%= "#{item.summary}" %> </div>
+            <%= "#{item.issuetype.name} - #{item.priority.name}" %>
+            <div><%= item.reporter.displayName%></div>
+            <div>
+                <p>To Do</p>
+                <%= item.attrs[:action] %>
+            </div>
+            <div>
+                <% if item.attrs[:breach]%>
+                    <p>Breach</p>
+                    <%= item.attrs[:breach]%>
+                <% end %>
+            </div>
+        </div>
+        <% end %>
+    <% end %>
+    </div>
 			</main>
 
 			<footer class="footer"></footer>
