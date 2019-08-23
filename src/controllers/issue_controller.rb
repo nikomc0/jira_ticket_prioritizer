@@ -84,7 +84,7 @@ class IssueController < ApplicationController
 	get '/p0' do
 		@data
 		puts @data
-		erb :'/p0'
+		erb :'p0'
 	end
 	
 end
