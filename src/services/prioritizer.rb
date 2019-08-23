@@ -21,10 +21,6 @@ module TicketPrioritizer
 			end
 		end
 
-		def ticket_status(ticket)
-			action_item(ticket)
-		end
-
 		def add_to_ticket_list(ticket)
 			@array.push(ticket)
 		end
@@ -54,22 +50,34 @@ module TicketPrioritizer
 
 		# Checks SLA requirements
 		def slap(ticket, status, created_date, type, duedate)
+			puts ticket.key
 			created_date = DateTime.parse(created_date).utc
-
+			puts updated = DateTime.parse(ticket.updated).utc
+			puts updated + (3600 * 24)
+			# puts reporter = ticket.reporter.displayName
+			# if ticket.comments.last && ticket.comments.last.author['displayName'] != ticket.creator['displayName']
+			# 	puts ticket.comments.last.updateAuthor['displayName']
+			# end
+			
+			# pp ticket
+			puts
 			# New to Acknowledge Breach
 			if status === 'new' && type === 'bug' && DateTime.now.utc >= created_date + (3600 * 24)
-				ticket.attrs[:breach] = 'new'
-				action_item(ticket)
+				breach = 'new'
+				action_item(ticket, breach)
 
 			# Triage Breach
 			elsif type === 'bug' && status != 'closed' && status != 'resolved' && status != 'done' && duedate === nil && created_date <= DateTime.now.utc - 7 * (3600 * 24)
-				ticket.attrs[:breach] = 'triage'
-				action_item(ticket)
+				breach= 'triage'
+				action_item(ticket, breach)
+			elsif status != 'closed' && status != 'resolved' && status != 'done' && ticket.comments.last && ticket.comments.last.author['displayName'] != ticket.creator['displayName'] && updated >= updated + (3600 * 24)
+				breach = 'support'
+				action_item(ticket, breach)
 			end
 		end
 
-		def action_item(ticket)
-			Action.new.set_action(ticket)
+		def action_item(ticket, breach)
+			Action.new({ticket: ticket, breach: breach}).set_action
 			add_to_ticket_list(ticket)
 		end
 	end
@@ -84,8 +92,19 @@ module TicketPrioritizer
 			@array
 		end
 
-		def action_item(ticket)
-			Action.new.set_action(ticket)
+		def ticket_status(ticket)
+			slap(ticket)
+		end
+
+		def slap(ticket)
+			if ticket.comments.last && ticket.comments.last.author['displayName'] != ticket.creator['displayName']
+				question = ticket.comments.last.author['displayName']
+				action_item(ticket, question)
+			end
+		end
+
+		def action_item(ticket, question)
+			Action.new({ticket: ticket, question: question}).set_action
 			add_to_ticket_list(ticket)
 		end
 
