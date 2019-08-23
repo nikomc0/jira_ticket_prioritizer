@@ -17,6 +17,7 @@ class IssueController < ApplicationController
 	}
 
 	@@client = JIRA::Client.new(options)
+
 	@data = {
 		bugs: @@client.Issue.jql(
 			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug")

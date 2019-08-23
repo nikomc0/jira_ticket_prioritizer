@@ -65,36 +65,12 @@ module TicketPrioritizer
 			elsif type === 'bug' && status != 'closed' && status != 'resolved' && status != 'done' && duedate === nil && created_date <= DateTime.now.utc - 7 * (3600 * 24)
 				ticket.attrs[:breach] = 'triage'
 				action_item(ticket)
-
-			# Regular ticket
-			else
-				action_item(ticket)
 			end
 		end
 
 		def action_item(ticket)
-			status = ticket.status.name
-			customer = 'Ping Customer'
-			support = 'QA'
-			assignee = "Ping Product"
-			pm = 'Ping Product Manager'
-
-			action = ticket.attrs[:action]
-			breach = ticket.attrs[:breach]
-
-			if status === 'fixed in prod'
-				ticket.attrs[:action] = customer
-				add_to_ticket_list(ticket)
-			elsif status === 'resolved'
-				ticket.attrs[:action] = support
-				add_to_ticket_list(ticket)
-			elsif breach === 'new'
-				ticket.attrs[:action] = pm
-				add_to_ticket_list(ticket)
-			elsif breach === 'triage'
-				ticket.attrs[:action] = assignee
-				add_to_ticket_list(ticket)
-			end
+			Action.new.set_action(ticket)
+			add_to_ticket_list(ticket)
 		end
 	end
 
@@ -109,7 +85,7 @@ module TicketPrioritizer
 		end
 
 		def action_item(ticket)
-			Action.new(ticket)
+			Action.new.set_action(ticket)
 			add_to_ticket_list(ticket)
 		end
 
