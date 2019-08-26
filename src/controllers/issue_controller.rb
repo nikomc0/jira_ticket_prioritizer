@@ -73,7 +73,8 @@ class IssueController < ApplicationController
 		@recent = @@client.Issue.jql(
 			'PROJECT = "Escalations Support"
 				AND ISSUETYPE in ("Bug", "Task")
-				AND updatedDate > -1d 
+				AND updatedDate > -1d
+				AND NOT status changed AFTER startOfDay()
 				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
 				fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
 				max_results: 100)
