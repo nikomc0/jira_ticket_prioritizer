@@ -73,7 +73,8 @@ class IssueController < ApplicationController
 		@recent = @@client.Issue.jql(
 			'PROJECT = "Escalations Support"
 				AND ISSUETYPE in ("Bug", "Task")
-				AND updatedDate > -2d AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+				AND updatedDate > -1d 
+				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
 				fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
 				max_results: 100)
 		erb :index
