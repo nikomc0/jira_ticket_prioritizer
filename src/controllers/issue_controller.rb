@@ -33,6 +33,13 @@ class IssueController < ApplicationController
 				max_results: 100)
 	}
 
+	# @recent = @@client.Issue.jql(
+	# 	'PROJECT = "Escalations Support"
+	# 		AND ISSUETYPE in ("Bug", "Task")
+	# 		AND updatedDate > -2d AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+	# 		fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
+	# 		max_results: 100)
+
 	# def self.get_issues
 	# 	esups = []
 	# 		loop do 
@@ -63,12 +70,18 @@ class IssueController < ApplicationController
 
 	get '/' do
 		@user = @@client.options[:username]
+		@recent = @@client.Issue.jql(
+			'PROJECT = "Escalations Support"
+				AND ISSUETYPE in ("Bug", "Task")
+				AND updatedDate > -2d AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+				fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
+				max_results: 100)
 		erb :index
 	end
 
 	get '/p3' do
 		@data
-		print @data
+		pp @data
 		erb :'/p3'
 	end
 
@@ -89,5 +102,4 @@ class IssueController < ApplicationController
 		puts @data
 		erb :'p0'
 	end
-	
 end

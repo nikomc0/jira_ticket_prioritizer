@@ -50,17 +50,17 @@ module TicketPrioritizer
 
 		# Checks SLA requirements
 		def slap(ticket, status, created_date, type, duedate)
-			puts ticket.key
+			# puts ticket.key
 			created_date = DateTime.parse(created_date).utc
-			puts updated = DateTime.parse(ticket.updated).utc
-			puts updated + (3600 * 24)
+			updated = DateTime.parse(ticket.updated).utc
+			# puts updated + (3600 * 24)
 			# puts reporter = ticket.reporter.displayName
 			# if ticket.comments.last && ticket.comments.last.author['displayName'] != ticket.creator['displayName']
 			# 	puts ticket.comments.last.updateAuthor['displayName']
 			# end
 			
 			# pp ticket
-			puts
+			# puts
 			# New to Acknowledge Breach
 			if status === 'new' && type === 'bug' && DateTime.now.utc >= created_date + (3600 * 24)
 				breach = 'new'

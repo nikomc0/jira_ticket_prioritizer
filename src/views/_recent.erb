@@ -1,0 +1,5 @@
+<p>Recently Updated</p>
+
+<% @recent.each do |bug| %>
+	<p> <a class="link" href=<%= "https://demandbase.atlassian.net/browse/#{bug.key}" %>> <%= "#{bug.key}" %> </a> </p>
+<% end %>
