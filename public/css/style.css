@@ -109,6 +109,11 @@
   color: #EF4B4C;
 }
 
+.overviewcard__esup-number a:hover {
+  text-decoration: none;
+  text-shadow: 1px 1px 5px #EF4B4C;
+}
+
 .creator {
   justify-self: start;
 }
