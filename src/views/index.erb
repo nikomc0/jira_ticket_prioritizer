@@ -62,16 +62,12 @@
 							<div class="creator"><%= ticket.creator['displayName']%></div>
 							
 						  <!-- To Do / Action Items -->
-							<div>
-								<%= ticket.attrs[:action] %>
-							</div>
+							<div><%= ticket.attrs[:action] %></div>
 							
 							<!-- Tickets that breached -->
-							<div>
-								<% if ticket.attrs[:breach]%>
-									<%= ticket.attrs[:breach]%>
-								<% end %>
-							</div>
+							<% if ticket.attrs[:breach]%>
+								<div><%= ticket.attrs[:breach]%></div>
+							<% end %>
 
 							<!-- Most Recent Comments -->
 							<% if ticket.comments.last && ticket.comments.last.author['displayName'] != ticket.creator['displayName'] %>
