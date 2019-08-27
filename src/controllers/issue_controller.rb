@@ -27,6 +27,7 @@ class IssueController < ApplicationController
 				max_results: 100),
 		tasks: @@client.Issue.jql(
 			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Task")
+				AND not status = "closed"
 				AND created > -30d
 				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
 				fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
