@@ -25,18 +25,18 @@
 }
 
 .side-bar {
-  /* grid-template-rows: 50px 1fr; */
+   /*grid-template-rows: 50px 1fr; */
   display: flex;
   flex-direction: column;
   grid-area: sidebar;
   background: #1a1e34;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 
 .side-bar-wrapper {
   position: relative;
   margin: 10px 1px 10px 20px;
-  border-radius: 5px;
+  /*border-radius: 5px;*/
   background: linear-gradient(0deg, #3358f4, #1d8cf8);
 }
 
@@ -50,9 +50,9 @@
 .side-bar__priority {
   text-align: center;
   /* position: relative; */
-  padding: 0;
-  margin-top: 85px;
-  margin-right: 25px;
+  padding: 20px;
+/*  margin-top: 85px;
+  margin-right: 25px;*/
   list-style-type: none;
 }
 
