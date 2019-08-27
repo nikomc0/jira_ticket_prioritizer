@@ -23,10 +23,10 @@
 				<h1 class="side-bar__title"><a href="/">SLAP</a></h1>
 				<div class="side-bar-wrapper">
 					<ul class="side-bar__priority">
-						<li class="side-bar__priority-item"><a class="link" href="/p0">P0</a></li>
-						<li class="side-bar__priority-item"><a class="link" href="/p1">P1</a></li>
-						<li class="side-bar__priority-item"><a class="link" href="/p2">P2</a></li>
-						<li class="side-bar__priority-item"><a class="link" href="/p3">P3</a></li>
+						<li class="side-bar__priority-ticket"><a class="link" href="/p0">P0</a></li>
+						<li class="side-bar__priority-ticket"><a class="link" href="/p1">P1</a></li>
+						<li class="side-bar__priority-ticket"><a class="link" href="/p2">P2</a></li>
+						<li class="side-bar__priority-ticket"><a class="link" href="/p3">P3</a></li>
 					</ul>
 
 					<div>
@@ -43,34 +43,50 @@
 					<div class="label-3">Issue Type</div>
 					<div class="label-4">Creator</div>
 					<div class="label-6">To Do</div>
-					<div class="label-7">Priority</div>
 					<div class="label-8">Breach</div>
 				</div>
+				
 				<div class="main-overview">
-					<% priority_tickets.each do |item| %>
+					<% priority_tickets.each do |ticket| %>
 						<div class="overviewcard">
-							<div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{item.key}" %>> <%= "#{item.key}" %> </a> </div>
-							<div class="overviewcard__esup-title"> <%= "#{item.summary}" %> </div>
-							<%= "#{item.issuetype.name} - #{item.priority.name}" %>
-							<div><%= item.reporter.displayName%></div>
+							<!-- Ticket Number i.e. ESUP-1234 -->
+							<div class="overviewcard__esup-number"><a href=<%= "https://demandbase.atlassian.net/browse/#{ticket.key}" %>> <%= "#{ticket.key}" %> </a> </div>
+							
+							<!-- Ticket Summary -->
+							<div class="overviewcard__esup-title"> <strong><%= "#{ticket.summary}" %></strong> </div>
+							
+							<!-- Issue Type and Priority Name i.e. Bug - P3 - Medium -->
+							<div class="issue_type"><%= "#{ticket.issuetype.name} - #{ticket.priority.name}" %></div>
+							
+							<!-- Ticket Creator -->
+							<div class="creator"><%= ticket.creator['displayName']%></div>
+							
+						  <!-- To Do / Action Items -->
 							<div>
-								<p>To Do</p>
-								<%= item.attrs[:action] %>
+								<%= ticket.attrs[:action] %>
 							</div>
+							
+							<!-- Tickets that breached -->
 							<div>
-								<% if item.attrs[:breach]%>
-									<p>Breach</p>
-									<%= item.attrs[:breach]%>
+								<% if ticket.attrs[:breach]%>
+									<%= ticket.attrs[:breach]%>
 								<% end %>
 							</div>
+
+							<!-- Most Recent Comments -->
+							<% if ticket.comments.last && ticket.comments.last.author['displayName'] != ticket.creator['displayName'] %>
+								<div class="card_comments" hidden>
+									<p>Latest Comment:</p>
+									<p><%= ticket.comments.last.body %></p>
+								</div>
+							<% end %>
 						</div>
 					<% end %>
 				</div>
+			
 			</main>
 
 			<footer class="footer"></footer>
 		</div>
 	</body>
-
-
 </html>

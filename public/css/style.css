@@ -76,11 +76,12 @@
 }
 
 .main-labels {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 7% 40% 15% 15% 15% 7%;
+  /*align-items: center;*/
+  /*justify-content: space-between;*/
   padding: 20px;
-  border-radius: 10px;
+  /*border-radius: 10px;*/
   background-color: #373942;
   color: grey;
   margin: 20px 20px;
@@ -88,16 +89,28 @@
 
 .main-overview {
   display: grid;
-  grid-auto-rows: 94px;
+  grid-auto-rows: auto;
   grid-gap: 15px;
   margin: 20px;
 }
 
 .overviewcard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 7% 40% 15% 15% 15% 7%;
+  grid-template-rows: 25% auto;
+  grid-row-gap: 10px;
+  align-items: left;
   padding: 20px;
   background-color: #27293d;
   color: grey;
+}
+
+.creator {
+  justify-self: start;
+}
+
+.card_comments {
+  grid-column-start: 2;
+  grid-column-end: 6;
+  overflow: hidden;
 }
