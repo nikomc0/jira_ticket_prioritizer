@@ -37,7 +37,7 @@
   position: relative;
   margin: 10px 1px 10px 20px;
   /*border-radius: 5px;*/
-  background: linear-gradient(0deg, #3358f4, #1d8cf8);
+  background: linear-gradient(0deg, #33548A, #3D619B);
 }
 
 .side-bar__title {
@@ -103,6 +103,10 @@
   padding: 20px;
   background-color: #27293d;
   color: grey;
+}
+
+.overviewcard__esup-number a {
+  color: #EF4B4C;
 }
 
 .creator {
