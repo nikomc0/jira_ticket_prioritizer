@@ -7,3 +7,4 @@
 
 4. In a browser visit 'localhost:9393'
 ![image](https://github.com/Demandbase/support_jira/blob/master/readme_files/Screen%20Shot%202019-07-18%20at%208.48.27%20PM.png)
+
