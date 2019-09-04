@@ -10,7 +10,7 @@ class IssueController < ApplicationController
 	options = {
 		:username => ENV['USERNAME'],
 		:password => ENV['API_TOKEN'],
-		:site     => 'https://demandbase.atlassian.net', # or 'https://<your_subdomain>.atlassian.net'
+		:site     => 'https://YOURCOMPANY.atlassian.net', # or 'https://<your_subdomain>.atlassian.net'
 		:context_path => '', # often blank
 		:auth_type => :basic,
 		:read_timeout => 120
@@ -22,39 +22,17 @@ class IssueController < ApplicationController
 		bugs: @@client.Issue.jql(
 			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug")
 				AND created > -30d
-				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+				AND CREATOR in ("USERS")',
 				fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
 				max_results: 100),
 		tasks: @@client.Issue.jql(
 			'PROJECT = "Escalations Support" AND ISSUETYPE in ("Task")
 				AND not status = "closed"
 				AND created > -30d
-				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+				AND CREATOR in ("USERS")',
 				fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
 				max_results: 100)
 	}
-
-	# @recent = @@client.Issue.jql(
-	# 	'PROJECT = "Escalations Support"
-	# 		AND ISSUETYPE in ("Bug", "Task")
-	# 		AND updatedDate > -2d AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
-	# 		fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
-	# 		max_results: 100)
-
-	# def self.get_issues
-	# 	esups = []
-	# 		loop do 
-	# 			issues = @@client.Issue.jql(
-	# 				'PROJECT = "Escalations Support" AND ISSUETYPE in ("Bug", "Task")
-	# 				AND created > -30d
-	# 				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
-	# 				max_results: 100, start_at: esups.size)
-	# 			esups.push(*issues)
-	# 		break if issues.size == 0
-	# 		end
-
-	# 	@data[:esups] = esups
-	# end
 	
 	# get_issues
 	@@bugs = TicketPrioritizer::Bugs.new(@data)
@@ -76,7 +54,7 @@ class IssueController < ApplicationController
 				AND ISSUETYPE in ("Bug", "Task")
 				AND updatedDate > -12h
 				AND NOT status changed AFTER startOfDay()
-				AND CREATOR in ("klange", "ddelbosque", "balbini", "jluse", "apaley")',
+				AND CREATOR in ("USERS")',
 				fields:[:status, :summary, :priority, :issuetype, :created, :updated, :lastViewed, :assignee, :creator, :reporter, :duedate, :comment],
 				max_results: 100)
 		erb :index
